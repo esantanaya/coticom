@@ -51,10 +51,50 @@ class MyDatePicker(tk.Toplevel):
         self.frame_days.pack()
 
     def init_needed_vars(self):
-        self.month_names = tuple(calendar.month_name)
-        self.day_names = tuple(calendar.day_abbr)
+        self.month_names = ('',
+            'Enero',
+            'Febrero',
+            'Marzo',
+            'Abril',
+            'Mayo',
+            'Junio',
+            'Julio',
+            'Agosto',
+            'Septiembre',
+            'Octubre',
+            'Noviembre',
+            'Diciembre',
+        )
+        self.day_names = (
+            'Lun',
+            'Mar',
+            'Mier',
+            'Juev',
+            'Vier',
+            'Sab',
+            'Dom',
+        )
         self.year = time.strftime("%Y")
         self.month = time.strftime("%B")
+        self.translate_month()
+
+    def translate_month(self):
+        spanish_month = {
+            '': '',
+            'April': 'Abril',
+            'August': 'Agosto',
+            'December': 'Diciembre',
+            'February': 'Febrero',
+            'January': 'Enero',
+            'July': 'Julio',
+            'June': 'Junio',
+            'March': 'Marzo',
+            'May': 'Mayo',
+            'November': 'Noviembre',
+            'October': 'Octubre',
+            'September': 'Septiembre'
+        }
+        self.month = spanish_month[self.month]
 
     def init_month_year_labels(self):
         self.year_str_var = tk.StringVar()
@@ -223,7 +263,7 @@ class MyDatePicker(tk.Toplevel):
 
 if __name__ == '__main__':
     def application():
-        MyDatePicker(format_str='%02d-%s-%s')
+        MyDatePicker(format_str='%02d/%s/%s')
 
     root = tk.Tk()
     btn = tk.Button(root, text="test", command=application)
