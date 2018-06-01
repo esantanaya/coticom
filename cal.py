@@ -94,7 +94,7 @@ class MyDatePicker(tk.Toplevel):
             'October': 'Octubre',
             'September': 'Septiembre'
         }
-        self.month = spanish_month[self.month]
+        self.month = spanish_month.get(self.month)
 
     def init_month_year_labels(self):
         self.year_str_var = tk.StringVar()
