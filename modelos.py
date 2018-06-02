@@ -1,6 +1,17 @@
 class Producto:
 
-    def __init__(self, modelo, descripcion, marca, proveedor, ultimo_costo, moneda_costo, precio_venta, moneda_venta, ultimo_te):
+    def __init__(
+        self,
+        modelo,
+        descripcion,
+        marca,
+        proveedor,
+        ultimo_costo,
+        moneda_costo,
+        precio_venta,
+        moneda_venta,
+        ultimo_te
+    ):
         self._modelo = modelo
         self._descripcion = descripcion
         self._marca = marca
