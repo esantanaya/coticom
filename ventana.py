@@ -51,6 +51,10 @@ class PestanaCotizacion(ttk.Frame):
         self.lblf_datos = ttk.LabelFrame(self.frame_datos, text="Datos")
         self.lblf_detalle = ttk.LabelFrame(self.frame_detalle, text="Detalle")
 
+        self.frame_abajo = tk.Frame(self)
+        self.btn_pdf = tk.Button(self.frame_abajo, text="PDF")
+        self.btn_enviar = tk.Button(self.frame_abajo, text="ENVIAR")
+
         self.frame_arriba.pack(side=tk.TOP, fill=tk.BOTH)
         self.lbl_id.pack(side=tk.LEFT, padx=5)
         self.txt_id.pack(side=tk.LEFT)
@@ -62,16 +66,21 @@ class PestanaCotizacion(ttk.Frame):
         self.btn_anterior.pack(side=tk.LEFT)
         self.btn_siguiente.pack(side=tk.LEFT)
 
-        self.lbl_fecha.pack(side=tk.LEFT)
-        self.txt_fecha.pack(side=tk.LEFT)
+        self.txt_fecha.pack(side=tk.RIGHT)
+        self.lbl_fecha.pack(side=tk.RIGHT)
 
         self.lblf_cliente.pack(fill=tk.BOTH, expand=1)
         self.lblf_datos.pack(fill=tk.BOTH, expand=1)
         self.lblf_detalle.pack(fill=tk.BOTH, expand=1)
 
+        self.frame_abajo.pack(side=tk.BOTTOM, fill=tk.BOTH)
+        self.btn_pdf.pack(side=tk.LEFT, padx=(350,50))
+        self.btn_enviar.pack(side=tk.RIGHT, padx=(50,350))
+
         self.frame_detalle.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=1)
         self.frame_datos.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=1)
         self.frame_cliente.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=1)
+
 
 if __name__ == "__main__":
     v = Ventana()
