@@ -54,9 +54,7 @@ class PestanaCotizacion(ttk.Frame):
         self.lbl_fecha = tk.Label(self.frame_arriba, text="Fecha")
         self.txt_fecha = tk.Entry(self.frame_arriba, textvariable=self.fecha)
 
-        self.frame_detalle = ttk.Frame(self)
 
-        self.lblf_detalle = ttk.LabelFrame(self.frame_detalle, text="Detalle")
 
         self.frame_abajo = tk.Frame(self)
         self.btn_pdf = tk.Button(self.frame_abajo, text="PDF")
@@ -77,14 +75,11 @@ class PestanaCotizacion(ttk.Frame):
         self.txt_fecha.pack(side=tk.RIGHT)
         self.lbl_fecha.pack(side=tk.RIGHT)
 
-        self.lblf_detalle.pack(fill=tk.BOTH, expand=1)
-
         self.frame_abajo.pack(side=tk.BOTTOM, fill=tk.BOTH)
         self.btn_pdf.pack(side=tk.LEFT, padx=(350,50))
         self.btn_enviar.pack(side=tk.RIGHT, padx=(50,350))
 
-        self.frame_detalle.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=1)
-
+        self.grupo_detalle()
         self.grupo_datos()
         self.grupo_cliente()
 
@@ -104,6 +99,13 @@ class PestanaCotizacion(ttk.Frame):
 
         self.lblf_datos.pack(fill=tk.BOTH, expand=1)
         self.frame_datos.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=1)
+
+    def grupo_detalle(self):
+        self.frame_detalle = ttk.Frame(self)
+        self.lblf_detalle = LabelFrameDetalle(self.frame_detalle, text="Detalle")
+
+        self.lblf_detalle.pack(fill=tk.BOTH, expand=1)
+        self.frame_detalle.pack(side=tk.BOTTOM, fill=tk.BOTH, expand=1)
 
 
 class PestanaCompras(PestanaCotizacion):
@@ -311,6 +313,36 @@ class LabelFrameDatos(ttk.LabelFrame):
         self.cmb_nota_1.pack(side=tk.LEFT)
         self.lbl_nota_2.pack(side=tk.LEFT)
         self.cmb_nota_2.pack(side=tk.LEFT)
+
+
+class LabelFrameDetalle(ttk.LabelFrame):
+
+    def __init__(self, master=None, **kwargs):
+        super().__init__(master, **kwargs)
+
+        tabla = tk.Frame(self)
+        self.parte = tk.Label(tabla, text="Parte", bg="gray")
+        self.modelo = tk.Label(tabla, text="Modelo", bg="gray")
+        self.descripcion = tk.Label(tabla, text="Descripción", bg="gray")
+        self.marca = tk.Label(tabla, text="Marca", bg="gray")
+        self.tiempo_entrega = tk.Label(tabla, text="Tiempo Entrega", bg="gray")
+        self.cantidad = tk.Label(tabla, text="Cantidad", bg="gray")
+        self.precio_unit = tk.Label(tabla, text="Precio Unitario", bg="gray")
+        self.importe = tk.Label(tabla, text="Importe", bg="gray")
+        self.proveedor = tk.Label(tabla, text="Proveedor", bg="gray")
+        self.costo_unit = tk.Label(tabla, text="Costo Unitario", bg="gray")
+
+        tabla.pack(fill=tk.BOTH, expand=1)
+        self.parte.grid(column=1, row=0)
+        self.modelo.grid(column=2, row=0)
+        self.descripcion.grid(column=3, row=0)
+        self.marca.grid(column=4, row=0)
+        self.tiempo_entrega.grid(column=5, row=0)
+        self.cantidad.grid(column=6, row=0)
+        self.precio_unit.grid(column=7, row=0)
+        self.importe.grid(column=8, row=0)
+        self.proveedor.grid(column=9, row=0)
+        self.costo_unit.grid(column=10, row=0)
 
 
 if __name__ == "__main__":
