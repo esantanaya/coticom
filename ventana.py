@@ -321,16 +321,35 @@ class LabelFrameDetalle(ttk.LabelFrame):
         super().__init__(master, **kwargs)
 
         tabla = tk.Frame(self)
-        self.parte = tk.Label(tabla, text="Parte", bg="gray")
-        self.modelo = tk.Label(tabla, text="Modelo", bg="gray")
-        self.descripcion = tk.Label(tabla, text="Descripción", bg="gray")
-        self.marca = tk.Label(tabla, text="Marca", bg="gray")
-        self.tiempo_entrega = tk.Label(tabla, text="Tiempo Entrega", bg="gray")
-        self.cantidad = tk.Label(tabla, text="Cantidad", bg="gray")
-        self.precio_unit = tk.Label(tabla, text="Precio Unitario", bg="gray")
-        self.importe = tk.Label(tabla, text="Importe", bg="gray")
-        self.proveedor = tk.Label(tabla, text="Proveedor", bg="gray")
-        self.costo_unit = tk.Label(tabla, text="Costo Unitario", bg="gray")
+        self.parte = tk.Label(tabla, text="Parte", bg="light gray")
+        self.modelo = tk.Label(tabla, text="Modelo", bg="light gray")
+        self.descripcion = tk.Label(tabla, text="Descripción", bg="light gray")
+        self.marca = tk.Label(tabla, text="Marca", bg="light gray")
+        self.tiempo_entrega = tk.Label(
+            tabla,
+            text="T Ent",
+            bg="light gray"
+        )
+        self.cantidad = tk.Label(tabla, text="Cant", bg="light gray")
+        self.precio_unit = tk.Label(
+            tabla,
+            text="P Unit",
+            bg="light gray"
+        )
+        self.importe = tk.Label(tabla, text="Imp", bg="light gray")
+        self.proveedor = tk.Label(tabla, text="Provr", bg="light gray")
+        self.costo_unit = tk.Label(tabla, text="C Unit", bg="light gray")
+
+        tk.Grid.columnconfigure(tabla, 1, minsize=5)
+        tk.Grid.columnconfigure(tabla, 2, minsize=10)
+        tk.Grid.columnconfigure(tabla, 3, minsize=50)
+        tk.Grid.columnconfigure(tabla, 4, minsize=10)
+        tk.Grid.columnconfigure(tabla, 5, minsize=5)
+        tk.Grid.columnconfigure(tabla, 6, minsize=5)
+        tk.Grid.columnconfigure(tabla, 7, minsize=6)
+        tk.Grid.columnconfigure(tabla, 8, minsize=6)
+        tk.Grid.columnconfigure(tabla, 9, minsize=7)
+        tk.Grid.columnconfigure(tabla, 10, minsize=6)
 
         tabla.pack(fill=tk.BOTH, expand=1)
         self.parte.grid(column=1, row=0)
@@ -344,6 +363,43 @@ class LabelFrameDetalle(ttk.LabelFrame):
         self.proveedor.grid(column=9, row=0)
         self.costo_unit.grid(column=10, row=0)
 
+        self.linea = LineaDetalle(tabla, 1)
+        self.linea.empacar()
+
+
+class LineaDetalle:
+
+    def __init__(self, master, indice):
+        self.indice = indice
+        self.texto_parte = tk.StringVar()
+        self.texto_parte.set(str(self.indice))
+        self.parte = ttk.Entry(
+            master,
+            textvariable=self.texto_parte,
+            width=5,
+            state="readonly"
+        )
+        self.modelo = ttk.Combobox(master, width=10)
+        self.descripcion = ttk.Entry(master, width=50, state="readonly")
+        self.marca = ttk.Entry(master, width=10, state="readonly")
+        self.tiempo_entrega = ttk.Entry(master, width=5, state="readonly")
+        self.cantidad = ttk.Entry(master, width=5, state="normal")
+        self.precio_unit = ttk.Entry(master, width=6, state="normal")
+        self.importe = ttk.Entry(master, width=6, state="readonly")
+        self.proveedor = ttk.Entry(master, width=7, state="readonly")
+        self.costo_unit = ttk.Entry(master, width=6, state="readonly")
+
+    def empacar(self):
+        self.parte.grid(column=1, row=self.indice)
+        self.modelo.grid(column=2, row=self.indice)
+        self.descripcion.grid(column=3, row=self.indice)
+        self.marca.grid(column=4, row=self.indice)
+        self.tiempo_entrega.grid(column=5, row=self.indice)
+        self.cantidad.grid(column=6, row=self.indice)
+        self.precio_unit.grid(column=7, row=self.indice)
+        self.importe.grid(column=8, row=self.indice)
+        self.proveedor.grid(column=9, row=self.indice)
+        self.costo_unit.grid(column=10, row=self.indice)
 
 if __name__ == "__main__":
     v = Ventana()
