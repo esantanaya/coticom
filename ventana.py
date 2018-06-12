@@ -4,6 +4,7 @@ from datetime import datetime
 
 
 class Ventana(tk.Tk):
+    
     def __init__(self):
         super().__init__()
         self.title("Cotizaciones y Compras CIMARR")
@@ -30,6 +31,7 @@ class Ventana(tk.Tk):
 
 
 class PestanaCotizacion(ttk.Frame):
+
     def __init__(self, master, **kwargs):
         super().__init__(master, **kwargs)
 
@@ -109,6 +111,7 @@ class PestanaCotizacion(ttk.Frame):
 
 
 class PestanaCompras(PestanaCotizacion):
+
     def __init__(self, master=None, **kwargs):
         super().__init__(master, **kwargs)
 

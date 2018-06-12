@@ -2,3 +2,6 @@ env1/
 *.xlsm
 *.bmpr
 *.pdf
+*.vsdx
+*.swp
+*~*
