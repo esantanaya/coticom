@@ -321,6 +321,16 @@ class LabelFrameDetalle(ttk.LabelFrame):
         super().__init__(master, **kwargs)
 
         tabla = tk.Frame(self)
+        abajo = tk.Frame(self)
+
+        self.subtotal = tk.StringVar()
+        self.subtotal.set("100")
+        self.iva = tk.StringVar()
+        self.iva.set("16")
+        self.total = tk.StringVar()
+        self.total.set("116")
+
+
         self.parte = tk.Label(tabla, text="Parte", bg="light gray")
         self.modelo = tk.Label(tabla, text="Modelo", bg="light gray")
         self.descripcion = tk.Label(tabla, text="Descripción", bg="light gray")
@@ -340,6 +350,13 @@ class LabelFrameDetalle(ttk.LabelFrame):
         self.proveedor = tk.Label(tabla, text="Provr", bg="light gray")
         self.costo_unit = tk.Label(tabla, text="C Unit", bg="light gray")
 
+        self.lbl_subtotal = tk.Label(abajo, text="Subtotal")
+        self.txt_subtotal = ttk.Entry(abajo, textvariable=self.subtotal)
+        self.lbl_iva = tk.Label(abajo, text="IVA")
+        self.txt_iva = ttk.Entry(abajo, textvariable=self.iva)
+        self.lbl_total = tk.Label(abajo, text="Total")
+        self.txt_total = ttk.Entry(abajo, textvariable=self.total)
+
         tk.Grid.columnconfigure(tabla, 1, minsize=5)
         tk.Grid.columnconfigure(tabla, 2, minsize=10)
         tk.Grid.columnconfigure(tabla, 3, minsize=50)
@@ -351,7 +368,7 @@ class LabelFrameDetalle(ttk.LabelFrame):
         tk.Grid.columnconfigure(tabla, 9, minsize=7)
         tk.Grid.columnconfigure(tabla, 10, minsize=6)
 
-        tabla.pack(fill=tk.BOTH, expand=1)
+        tabla.pack(fill=tk.BOTH, expand=1, side=tk.TOP)
         self.parte.grid(column=1, row=0)
         self.modelo.grid(column=2, row=0)
         self.descripcion.grid(column=3, row=0)
@@ -366,6 +383,13 @@ class LabelFrameDetalle(ttk.LabelFrame):
         self.linea = LineaDetalle(tabla, 1)
         self.linea.empacar()
 
+        abajo.pack(fill=tk.BOTH, expand=1, side=tk.BOTTOM)
+        self.lbl_subtotal.pack(side=tk.LEFT)
+        self.txt_subtotal.pack(side=tk.LEFT)
+        self.lbl_iva.pack(side=tk.LEFT)
+        self.txt_iva.pack(side=tk.LEFT)
+        self.lbl_total.pack(side=tk.LEFT)
+        self.txt_total.pack(side=tk.LEFT)
 
 class LineaDetalle:
 
@@ -386,7 +410,7 @@ class LineaDetalle:
         self.cantidad = ttk.Entry(master, width=5, state="normal")
         self.precio_unit = ttk.Entry(master, width=6, state="normal")
         self.importe = ttk.Entry(master, width=6, state="readonly")
-        self.proveedor = ttk.Entry(master, width=7, state="readonly")
+        self.proveedor = ttk.Combobox(master, width=7, state="normal")
         self.costo_unit = ttk.Entry(master, width=6, state="readonly")
 
     def empacar(self):
