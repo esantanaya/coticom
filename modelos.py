@@ -1,3 +1,26 @@
+from sqlalchemy import Table, Column, String, Integer, Numeric
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
+
+Base = declarative_base()
+
+
+class Proveedor(Base):
+    __tablename__ = 'proveedor'
+
+    clave = Column(Integer(), primary_key=True)
+    nombre = Column(String(50), index=True)
+    telefonos = Column(String(100))
+    domicilio = Column(String(100))
+    contacto 
+
+
+class Contacto(Base):
+    __tablename__ = 'contacto'
+
+    cliente_proveedor =
+
+
 class Producto:
 
     def __init__(
