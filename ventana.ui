@@ -40,6 +40,10 @@
   <property name="windowTitle">
    <string>Cotizaciónes y Compras CIMARR</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>assets/image016.png</normaloff>assets/image016.png</iconset>
+  </property>
   <property name="windowOpacity">
    <double>1.000000000000000</double>
   </property>
