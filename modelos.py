@@ -1,118 +1,56 @@
-from sqlalchemy import Table, Column, String, Integer, Numeric
+from sqlalchemy import Table, Column, String, Integer, Numeric, Boolean, ForeignKey, Sequence
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
+from bd import Conexion
 
 Base = declarative_base()
 
 
 class Proveedor(Base):
-    __tablename__ = 'proveedor'
+    __tablename__ = 'proveedores'
 
-    clave = Column(Integer(), primary_key=True)
-    nombre = Column(String(50), index=True)
-    telefonos = Column(String(100))
-    domicilio = Column(String(100))
-    contacto 
-
-
-class Contacto(Base):
-    __tablename__ = 'contacto'
-
-    cliente_proveedor =
+    clave = Column(String(5), primary_key=True)
+    nombre = Column(String(200), index=True)
+    telefonos = Column(String(50))
+    domicilio = Column(String(500))
 
 
-class Producto:
+class ContactoProveedor(Base):
+    __tablename__ = 'contactos_proveedores'
 
-    def __init__(
-        self,
-        modelo,
-        descripcion,
-        marca,
-        proveedor,
-        ultimo_costo,
-        moneda_costo,
-        precio_venta,
-        moneda_venta,
-        ultimo_te
-    ):
-        self._modelo = modelo
-        self._descripcion = descripcion
-        self._marca = marca
-        self._proveedor = proveedor
-        self._ultimo_costo = ultimo_costo
-        self._moneda_costo = moneda_costo
-        self._precio_venta = precio_venta
-        self._moneda_venta = moneda_venta
-        self._ultimo_te = ultimo_te
+    clave_proveedor = Column(
+        String(5), ForeignKey('proveedores.clave'), primary_key=True
+    )
+    consecutivo = Column(
+        Integer(), Sequence('consecutivo_proveedor'), primary_key=True
+    )
+    principal = Column(Boolean())
+    cargo = Column(String(100))
+    correo = Column(String(50))
+    movil = Column(String(15))
 
-        @property
-        def modelo(self):
-            return self._modelo
+    proveedor = relationship(
+        'Proveedor',
+        backref=backref('contactos_proveedores'),
+        order_by=clave_proveedor
+    )
 
-        @modelo.setter
-        def modelo(self, modelo):
-            self._modelo = modelo
 
-        @property
-        def descripcion(self):
-            return self._descripcion
+class Moneda(Base):
+    __tablename__ = 'monedas'
 
-        @descripcion.setter
-        def descripcion(self, descripcion):
-            self._descripcion = descripcion
+    clave = Column(String(5), primary_key=True)
+    descripcion = Column(String(100))
 
-        @property
-        def marca(self):
-            return self._marca
 
-        @marca.setter
-        def marca(self, marca):
-            self._marca  = marca
+class Producto(Base):
+    __tablename__ = 'productos'
 
-        @property
-        def proveedor(self):
-            return self._proveedor
+    modelo = Column(String(50), primary_key=True)
+    descripcion = Column(String(200))
+    marca = Column(String(50))
+    clave_proveedor = Column(String(5), ForeignKey('proveedores.clave'))
+    ultimo_costo = Column(Numeric())
 
-        @proveedor.setter
-        def proveedor(self, proveedor):
-            self._proveedor = proveedor
-
-        @property
-        def ultimo_costo(self):
-            return self._ultimo_costo
-
-        @ultimo_costo.setter
-        def ultimo_costo(self, ultimo_costo):
-            self._ultimo_costo = ultimo_costo
-
-        @property
-        def moneda_costo(self):
-            return self._moneda_costo
-
-        @moneda_costo.setter
-        def moneda_costo(self, moneda_costo):
-            self._moneda_costo = moneda_costo
-
-        @property
-        def precio_venta(self):
-            return self._precio_venta
-
-        @precio_venta.setter
-        def precio_venta(self, precio_venta):
-            self._precio_venta = precio_venta
-
-        @property
-        def moneda_venta(self):
-            return self._moneda_venta
-
-        @moneda_venta.setter
-        def moneda_venta(self, moneda_venta):
-            self._moneda_venta = moneda_venta
-
-        @property
-        def ultimo_te(self):
-            return self._ultimo_te
-
-        @ultimo_te.setter
-        def ultimo_te(self, ultimo_te):
-            self._ultimo_te = ultimo_te
+if __name__ == '__main__':
+    Base.metadata.create_all(Conexion().engine)
