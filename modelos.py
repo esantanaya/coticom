@@ -1,6 +1,7 @@
 from sqlalchemy import Table, Column, String, Integer, Numeric, Boolean, ForeignKey, Sequence
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, backref
+
 from bd import Conexion
 
 Base = declarative_base()
@@ -18,11 +19,17 @@ class Proveedor(Base):
 class ContactoProveedor(Base):
     __tablename__ = 'contactos_proveedores'
 
+    consecutivo_secuencia = Sequence(
+        'consecutivo_proveedor', metadata=Base.metadata
+    )
     clave_proveedor = Column(
         String(5), ForeignKey('proveedores.clave'), primary_key=True
     )
     consecutivo = Column(
-        Integer(), Sequence('consecutivo_proveedor'), primary_key=True
+        Integer,
+        consecutivo_secuencia,
+        server_default=consecutivo_secuencia.next_value(),
+        primary_key=True
     )
     principal = Column(Boolean())
     cargo = Column(String(100))
