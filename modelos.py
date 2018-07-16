@@ -1,11 +1,14 @@
 from sqlalchemy import (Table, Column, String, Integer, Numeric, Boolean,
-    ForeignKey, Sequence, Date)
+    ForeignKey, Sequence, Date, create_engine)
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship, backref
-
-from bd import Conexion
+from sqlalchemy.ext.hybrid import hybrid_method
+from sqlalchemy.orm import relationship, backref, sessionmaker
 
 Base = declarative_base()
+con_string = 'postgresql+psycopg2://postgres:4cP#4j9R92@localhost:5432/pruebas'
+engine = create_engine(con_string)
+Session = sessionmaker(bind=engine)
+session = Session()
 
 
 class Proveedor(Base):
@@ -54,6 +57,19 @@ class Cliente(Base):
     nombre = Column(String(200), index=True)
     telefonos = Column(String(50))
     domicilio = Column(String(500))
+
+    @classmethod
+    def get_cliente(cls, clave):
+        cliente = session.query(cls).filter(cls.clave == clave).one()
+        return cliente
+
+    @classmethod
+    def get_clientes(cls):
+        clientes = session.query(cls.clave).all()
+        return clientes
+
+    def __repr__(self):
+        return f'Cliente: {self.clave}, {self.nombre}'
 
 class ContactoCliente(Base):
     __tablename__ = 'contactos_clientes'
@@ -202,11 +218,11 @@ class Cotizacion(Base):
     clave_vigencia = Column(
         Integer(),
         ForeignKey(
-            'condiciones_pago.clave', ondelete='RESTRICT', onupdate='RESTRICT'
+            'vigencias.clave', ondelete='RESTRICT', onupdate='RESTRICT'
         )
     )
     clave_moneda = Column(
-        Integer(),
+        String(5),
         ForeignKey('monedas.clave', ondelete='RESTRICT', onupdate='RESTRICT')
     )
     clave_asesor = Column(
@@ -224,6 +240,15 @@ class Cotizacion(Base):
     subtotal = Column(Numeric())
     iva = Column(Numeric())
     total = Column(Numeric())
+
+    def get_cotizaciones(self):
+        cotizaciones = session.query(Cotizacion).all()
+        return cotizaciones
+
+    @classmethod
+    def get_ultima_cotizacion(cls):
+        cotizacion = session.query(cls).order_by(cls.clave.desc()).first()
+        return cotizacion
 
 
 class DetalleCotizacion(Base):
@@ -410,4 +435,4 @@ class DetalleCompra(Base):
     importe = Column(Numeric())
 
 if __name__ == '__main__':
-    Base.metadata.create_all(Conexion().engine)
+    Base.metadata.create_all(engine)
