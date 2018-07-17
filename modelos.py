@@ -90,7 +90,8 @@ class ContactoCliente(Base):
         primary_key=True
     )
     principal = Column(Boolean())
-    cargo = Column(String(100))
+    nombre = Column(String(100))
+    cargo = Column(String(50))
     correo = Column(String(50))
     movil = Column(String(15))
 
@@ -99,6 +100,14 @@ class ContactoCliente(Base):
         backref=backref('contactos_clientes'),
         order_by=clave_cliente
     )
+
+    @classmethod
+    def get_contacto_primario(cls, cliente):
+        contacto = session.query(cls).filter(
+            cliente.clave == cls.clave_cliente,
+            cls.principal == True
+        ).one()
+        return contacto
 
 
 class Moneda(Base):

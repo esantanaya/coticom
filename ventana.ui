@@ -115,7 +115,7 @@
       <property name="frameShadow">
        <enum>QFrame::Raised</enum>
       </property>
-      <widget class="QWidget" name="">
+      <widget class="QWidget" name="layoutWidget">
        <property name="geometry">
         <rect>
          <x>8</x>
@@ -297,7 +297,7 @@
           </widget>
          </item>
          <item>
-          <widget class="QLineEdit" name="lineEdit_4"/>
+          <widget class="QLineEdit" name="texto_nombre_contacto"/>
          </item>
          <item>
           <widget class="QLabel" name="label_8">
