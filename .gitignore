@@ -1,4 +1,6 @@
 env1/
+html/
+assets/
 *.xlsm
 *.bmpr
 *.pdf
