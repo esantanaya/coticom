@@ -23,8 +23,7 @@ class Ventana(QMainWindow):
             self.control_fecha.setDate(date.today())
             cotizacion = Cotizacion.get_ultima_cotizacion()
             self.texto_id.setText(str(cotizacion.clave))
-            clientes = Cliente.get_clientes()
-            self.carga_clientes(clientes)
+            self.carga_clientes()
             self.combobox_clave_cliente.currentIndexChanged.connect(self.cambia_combo_cliente)
             self.combobox_clave_cliente.setCurrentIndex(1)
             self.carga_datos()
@@ -36,7 +35,9 @@ class Ventana(QMainWindow):
             cliente = Cliente.get_cliente(self.combobox_clave_cliente.currentText())
             self.carga_cliente(cliente)
 
-    def carga_clientes(self, clientes):
+    def carga_clientes(self):
+        clientes = Cliente.get_clientes()
+
         for cliente in clientes:
             self.combobox_clave_cliente.addItem(cliente.clave)
 
@@ -55,10 +56,10 @@ class Ventana(QMainWindow):
             self.texto_correo_contacto.setText(contacto.correo)
 
     def vacia_contacto(self):
-        self.texto_nombre_contacto.setText('')
-        self.texto_cargo.setText('')
-        self.texto_movil_contacto.setText('')
-        self.texto_correo_contacto.setText('')
+        self.texto_nombre_contacto.clear()
+        self.texto_cargo.clear()
+        self.texto_movil_contacto.clear()
+        self.texto_correo_contacto.clear()
 
     def carga_datos(self):
         self.carga_condiciones()
