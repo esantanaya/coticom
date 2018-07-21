@@ -9,12 +9,13 @@ import sys
 from datetime import date
 
 from modelos import Cotizacion, DetalleCotizacion, Cliente, ContactoCliente
+from exceptions import ErrorConexion
 
 
 class Ventana(QMainWindow):
     def __init__(self):
+        QMainWindow.__init__(self)
         try:
-            QMainWindow.__init__(self)
             uic.loadUi('ventana.ui', self)
             self.control_fecha.setDate(date.today())
             cotizacion = Cotizacion.get_ultima_cotizacion()
@@ -24,8 +25,7 @@ class Ventana(QMainWindow):
             self.combobox_clave_cliente.currentIndexChanged.connect(self.cambia_combo_cliente)
             self.combobox_clave_cliente.setCurrentIndex(1)
         except OperationalError:
-            error = Error('Hay un problema con la conexión a la base de datos')
-            error.exec_()
+            raise ErrorConexion
 
     def cambia_combo_cliente(self):
         if len(self.combobox_clave_cliente.currentText()) > 0:
@@ -65,7 +65,11 @@ class Error(QDialog):
         self.boton_ok.clicked.connect(self.close)
 
 app = QApplication([])
-window = Ventana()
-window.show()
-
-app.exec_()
+try:
+    window = Ventana()
+except ErrorConexion:
+    error = Error('Hay un problema con la conexión a la base de datos')
+    error.exec_()
+else:
+    window.show()
+    app.exec_()
