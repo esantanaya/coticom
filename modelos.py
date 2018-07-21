@@ -116,6 +116,16 @@ class Moneda(Base):
     clave = Column(String(5), primary_key=True)
     descripcion = Column(String(100))
 
+    @classmethod
+    def get_monedas(cls):
+        monedas = session.query(cls).all()
+        return monedas
+
+    @classmethod
+    def get_moneda(cls, clave):
+        moneda = session.query(cls).filter(cls.clave == clave).one()
+        return moneda
+
 
 class Producto(Base):
     __tablename__ = 'productos'
@@ -157,6 +167,16 @@ class CondicionPago(Base):
     )
     descripcion = Column(String(100))
 
+    @classmethod
+    def get_condiciones(cls):
+        condiciones = session.query(cls).all()
+        return condiciones
+
+    @classmethod
+    def get_condicione(cls, clave):
+        condicion = session.query(cls).filter(cls.clave == clave).one()
+        return condicion
+
 
 class Vigencia(Base):
     __tablename__ = 'vigencias'
@@ -171,6 +191,16 @@ class Vigencia(Base):
     )
     descripcion = Column(String(100))
 
+    @classmethod
+    def get_vigencias(cls):
+        vigencias = session.query(cls).all()
+        return vigencias
+
+    @classmethod
+    def get_vigencia(cls, clave):
+        vigencia = session.query(cls).filter(cls.clave == clave).one()
+        return vigencia
+
 
 class Nota(Base):
     __tablename__ = 'notas'
@@ -184,6 +214,16 @@ class Nota(Base):
         primary_key=True
     )
     descripcion = Column(String(100))
+
+    @classmethod
+    def get_notas(cls):
+        notas = session.query(cls).all()
+        return notas
+
+    @classmethod
+    def get_nota(cls, clave):
+        nota = session.query(cls).filter(cls.clave == clave).one()
+        return nota
 
 
 class Asesor(Base):
@@ -201,6 +241,15 @@ class Asesor(Base):
     correo = Column(String(50))
     movil = Column(String(15))
 
+    @classmethod
+    def get_asesores(cls):
+        asesores = session.query(cls).all()
+        return asesores
+
+    @classmethod
+    def get_asesor(cls, clave):
+        asesor = session.query(cls).filter(cls.clave == clave).one()
+        return asesor
 
 class Cotizacion(Base):
     __tablename__ = 'cotizaciones'

@@ -8,7 +8,10 @@ from sqlalchemy.exc import OperationalError
 import sys
 from datetime import date
 
-from modelos import Cotizacion, DetalleCotizacion, Cliente, ContactoCliente
+from modelos import (
+    Cotizacion, DetalleCotizacion, Cliente, ContactoCliente, CondicionPago,
+    Vigencia, Moneda, Asesor, Nota
+)
 from exceptions import ErrorConexion
 
 
@@ -21,9 +24,10 @@ class Ventana(QMainWindow):
             cotizacion = Cotizacion.get_ultima_cotizacion()
             self.texto_id.setText(str(cotizacion.clave))
             clientes = Cliente.get_clientes()
-            self.carga_clientes (clientes)
+            self.carga_clientes(clientes)
             self.combobox_clave_cliente.currentIndexChanged.connect(self.cambia_combo_cliente)
             self.combobox_clave_cliente.setCurrentIndex(1)
+            self.carga_datos()
         except OperationalError:
             raise ErrorConexion
 
@@ -55,6 +59,43 @@ class Ventana(QMainWindow):
         self.texto_cargo.setText('')
         self.texto_movil_contacto.setText('')
         self.texto_correo_contacto.setText('')
+
+    def carga_datos(self):
+        self.carga_condiciones()
+        self.carga_vigencias()
+        self.carga_moneda()
+        self.carga_asesores()
+        self.carga_notas()
+
+    def carga_notas(self):
+        notas = Nota.get_notas()
+
+        for nota in notas:
+            self.combobox_nota1.addItem(nota.descripcion)
+            self.combobox_nota2.addItem(nota.descripcion)
+
+    def carga_asesores(self):
+        asesores = Asesor.get_asesores()
+
+        for asesor in asesores:
+            self.combobox_asesor.addItem(asesor.nombre)
+
+    def carga_moneda(self):
+        monedas = Moneda.get_monedas()
+
+        for moneda in monedas:
+            self.combobox_moneda.addItem(moneda.clave)
+
+    def carga_vigencias(self):
+        vigencias = Vigencia.get_vigencias()
+
+        for vigencia in vigencias:
+            self.combobox_vigencia.addItem(vigencia.descripcion)
+
+    def carga_condiciones(self):
+        condiciones = CondicionPago.get_condiciones()
+        for condicion in condiciones:
+            self.combobox_condiciones.addItem(condicion.descripcion)
 
 
 class Error(QDialog):
