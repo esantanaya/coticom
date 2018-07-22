@@ -1,7 +1,7 @@
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from PyQt5.QtGui import *
-from PyQt5 import uic
+from PyQt5 import uic, QtWidgets
 from sqlalchemy.orm.exc import NoResultFound
 from sqlalchemy.exc import OperationalError
 
@@ -10,7 +10,7 @@ from datetime import date
 
 from modelos import (
     Cotizacion, DetalleCotizacion, Cliente, ContactoCliente, CondicionPago,
-    Vigencia, Moneda, Asesor, Nota
+    Vigencia, Moneda, Asesor, Nota, Producto, Proveedor
 )
 from exceptions import ErrorConexion
 
@@ -21,8 +21,8 @@ class Ventana(QMainWindow):
         try:
             uic.loadUi('ventana.ui', self)
             self.control_fecha.setDate(date.today())
-            cotizacion = Cotizacion.get_ultima_cotizacion()
-            self.texto_id.setText(str(cotizacion.clave))
+            self.cotizacion = Cotizacion.get_ultima_cotizacion()
+            self.texto_id.setText(str(self.cotizacion.clave))
             self.carga_clientes()
             self.combobox_clave_cliente.currentIndexChanged.connect(
                 self.cambia_combo_cliente
@@ -85,8 +85,77 @@ class Ventana(QMainWindow):
             self.carga_moneda()
             self.carga_asesores()
             self.carga_notas()
+            self.carga_detalles()
+            self.carga_sumas()
         except ErrorConexion:
             raise ErrorConexion
+
+    def carga_sumas(self):
+        self.label_valor_subtotal.setText('$'+str(self.cotizacion.subtotal))
+        self.label_valor_iva.setText('$'+str(self.cotizacion.iva))
+        self.label_valor_total.setText('$'+str(self.cotizacion.total))
+
+    def carga_detalles(self):
+        try:
+            lineas = DetalleCotizacion.get_detalle(self.cotizacion.clave)
+        except OperationalError:
+            raise ErrorConexion
+        else:
+            for num, detalle in enumerate(lineas):
+                producto = Producto.get_producto(detalle.modelo_producto)
+                proveedor = Proveedor.get_proveedor(producto.clave_proveedor)
+
+                self.tabla_detalle.insertRow(num)
+                self.tabla_detalle.setItem(
+                    num,
+                    0,
+                    QtWidgets.QTableWidgetItem(str(detalle.linea))
+                )
+                self.tabla_detalle.setItem(
+                    num,
+                    1,
+                    QtWidgets.QTableWidgetItem(producto.modelo)
+                )
+                self.tabla_detalle.setItem(
+                    num,
+                    2,
+                    QtWidgets.QTableWidgetItem(producto.descripcion)
+                )
+                self.tabla_detalle.setItem(
+                    num,
+                    3,
+                    QtWidgets.QTableWidgetItem(producto.marca)
+                )
+                self.tabla_detalle.setItem(
+                    num,
+                    4,
+                    QtWidgets.QTableWidgetItem(detalle.tiempo_entrega)
+                )
+                self.tabla_detalle.setItem(
+                    num,
+                    5,
+                    QtWidgets.QTableWidgetItem(str(detalle.cantidad))
+                )
+                self.tabla_detalle.setItem(
+                    num,
+                    6,
+                    QtWidgets.QTableWidgetItem(str(detalle.precio_unitario))
+                )
+                self.tabla_detalle.setItem(
+                    num,
+                    7,
+                    QtWidgets.QTableWidgetItem(str(detalle.importe))
+                )
+                self.tabla_detalle.setItem(
+                    num,
+                    8,
+                    QtWidgets.QTableWidgetItem(proveedor.nombre)
+                )
+                self.tabla_detalle.setItem(
+                    num,
+                    9,
+                    QtWidgets.QTableWidgetItem(str(producto.ultimo_costo))
+                )
 
     def carga_notas(self):
         try:

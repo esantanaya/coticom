@@ -19,6 +19,11 @@ class Proveedor(Base):
     telefonos = Column(String(50))
     domicilio = Column(String(500))
 
+    @classmethod
+    def get_proveedor(cls, clave):
+        proveedor = session.query(cls).filter(cls.clave == clave).one()
+        return proveedor
+
 
 class ContactoProveedor(Base):
     __tablename__ = 'contactos_proveedores'
@@ -145,6 +150,11 @@ class Producto(Base):
         ForeignKey('monedas.clave', ondelete='RESTRICT', onupdate='RESTRICT')
     )
     ultimo_te = Column(Numeric())
+
+    @classmethod
+    def get_producto(cls, modelo):
+        producto = session.query(cls).filter(cls.modelo == modelo).one()
+        return producto
 
 
 class Correo(Base):
@@ -333,6 +343,13 @@ class DetalleCotizacion(Base):
     cantidad = Column(Integer())
     precio_unitario = Column(Numeric())
     importe = Column(Numeric())
+
+    @classmethod
+    def get_detalle(cls, clave_cotizacion):
+        detalle = session.query(cls).filter(
+            cls.clave_cotizacion == clave_cotizacion
+        ).all()
+        return detalle
 
 
 class UsoCFDI(Base):
