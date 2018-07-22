@@ -24,22 +24,39 @@ class Ventana(QMainWindow):
             cotizacion = Cotizacion.get_ultima_cotizacion()
             self.texto_id.setText(str(cotizacion.clave))
             self.carga_clientes()
-            self.combobox_clave_cliente.currentIndexChanged.connect(self.cambia_combo_cliente)
+            self.combobox_clave_cliente.currentIndexChanged.connect(
+                self.cambia_combo_cliente
+            )
             self.combobox_clave_cliente.setCurrentIndex(1)
             self.carga_datos()
         except OperationalError:
             raise ErrorConexion
+        except ErrorConexion:
+            raise ErrorConexion
 
     def cambia_combo_cliente(self):
         if len(self.combobox_clave_cliente.currentText()) > 0:
-            cliente = Cliente.get_cliente(self.combobox_clave_cliente.currentText())
-            self.carga_cliente(cliente)
+            try:
+                cliente = Cliente.get_cliente(
+                    self.combobox_clave_cliente.currentText()
+                )
+                self.carga_cliente(cliente)
+            except OperationalError:
+                self.muestra_error(
+                    'Hay un problema con la conexión a la base de datos',
+                    True
+                )
+            except ErrorConexion:
+                raise ErrorConexion
 
     def carga_clientes(self):
-        clientes = Cliente.get_clientes()
-
-        for cliente in clientes:
-            self.combobox_clave_cliente.addItem(cliente.clave)
+        try:
+            clientes = Cliente.get_clientes()
+        except OperationalError:
+            raise ErrorConexion
+        else:
+            for cliente in clientes:
+                self.combobox_clave_cliente.addItem(cliente.clave)
 
     def carga_cliente(self, cliente):
         self.texto_nombre_cliente.setText(cliente.nombre)
@@ -62,41 +79,66 @@ class Ventana(QMainWindow):
         self.texto_correo_contacto.clear()
 
     def carga_datos(self):
-        self.carga_condiciones()
-        self.carga_vigencias()
-        self.carga_moneda()
-        self.carga_asesores()
-        self.carga_notas()
+        try:
+            self.carga_condiciones()
+            self.carga_vigencias()
+            self.carga_moneda()
+            self.carga_asesores()
+            self.carga_notas()
+        except ErrorConexion:
+            raise ErrorConexion
 
     def carga_notas(self):
-        notas = Nota.get_notas()
-
-        for nota in notas:
-            self.combobox_nota1.addItem(nota.descripcion)
-            self.combobox_nota2.addItem(nota.descripcion)
+        try:
+            notas = Nota.get_notas()
+        except OperationalError:
+            raise ErrorConexion
+        else:
+            for nota in notas:
+                self.combobox_nota1.addItem(nota.descripcion)
+                self.combobox_nota2.addItem(nota.descripcion)
 
     def carga_asesores(self):
-        asesores = Asesor.get_asesores()
-
-        for asesor in asesores:
-            self.combobox_asesor.addItem(asesor.nombre)
+        try:
+            asesores = Asesor.get_asesores()
+        except OperationalError:
+            raise ErrorConexion
+        else:
+            for asesor in asesores:
+                self.combobox_asesor.addItem(asesor.nombre)
 
     def carga_moneda(self):
-        monedas = Moneda.get_monedas()
-
-        for moneda in monedas:
-            self.combobox_moneda.addItem(moneda.clave)
+        try:
+            monedas = Moneda.get_monedas()
+        except OperationalError:
+            raise ErrorConexion
+        else:
+            for moneda in monedas:
+                self.combobox_moneda.addItem(moneda.clave)
 
     def carga_vigencias(self):
-        vigencias = Vigencia.get_vigencias()
-
-        for vigencia in vigencias:
-            self.combobox_vigencia.addItem(vigencia.descripcion)
+        try:
+            vigencias = Vigencia.get_vigencias()
+        except OperationalError:
+            raise ErrorConexion
+        else:
+            for vigencia in vigencias:
+                self.combobox_vigencia.addItem(vigencia.descripcion)
 
     def carga_condiciones(self):
-        condiciones = CondicionPago.get_condiciones()
-        for condicion in condiciones:
-            self.combobox_condiciones.addItem(condicion.descripcion)
+        try:
+            condiciones = CondicionPago.get_condiciones()
+        except OperationalError:
+            raise ErrorConexion
+        else:
+            for condicion in condiciones:
+                self.combobox_condiciones.addItem(condicion.descripcion)
+
+    def muestra_error(self, mensaje, cierra=False):
+        error = Error(mensaje)
+        error.exec_()
+        if cierra:
+            self.close()
 
 
 class Error(QDialog):
