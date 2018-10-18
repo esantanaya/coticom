@@ -60,12 +60,26 @@ pdf.drawString(163.5*mm, 221.78*mm, '#Asesor') #Variable
 pdf.drawString(163.5*mm, 216.78*mm, '#Móvil') #Variable
 
 #Lineas para los titulos de las columnas
+ultima_linea = 206.78
 pdf.line(5*mm, 211.78*mm, 209.22*mm, 211.78*mm)
-pdf.line(5*mm, 206.78*mm, 209.22*mm, 206.78*mm)
+pdf.line(5*mm, ultima_linea*mm, 209.22*mm, 206.78*mm)
 pdf.setFont('ArialB', 9)
 pdf.drawString(11.5*mm, 208*mm, 'MODELO')
 pdf.drawString(59.14*mm, 208*mm, 'DESCRIPCIÓN')
+pdf.drawString(113.64*mm, 208*mm, 'MARCA')
+pdf.drawString(138.64*mm, 208*mm, 'T/E')
+pdf.drawString(152.64*mm, 208*mm, 'CANT.')
+pdf.drawString(166.64*mm, 208*mm, 'PRECIO U.')
+pdf.drawString(190.64*mm, 208*mm, 'IMPORTE')
 
+#Detalle
+#Caben 22 conceptos en cada hoja
+valor = 7
+pdf.setFont('Calibri', 9)
+pdf.drawString(6*mm, (ultima_linea-valor)*mm, '#Modelo')
+pdf.drawString(32*mm, (ultima_linea-valor)*mm, '#Descripción')
+pdf.drawString(114*mm, (ultima_linea-valor)*mm, '#Marca')
+pdf.drawString(134*mm, (ultima_linea-valor)*mm, '#T/E')
 
 #Linea de fin de detalle
 pdf.line(5*mm, 54.65*mm, 209.22*mm, 54.65*mm)
