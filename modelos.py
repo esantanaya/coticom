@@ -1,8 +1,8 @@
-from sqlalchemy import (Table, Column, String, Integer, Numeric, Boolean,
-    ForeignKey, Sequence, Date, create_engine)
+from sqlalchemy import (Boolean, Column, Date, ForeignKey, Integer, Numeric,
+                        Sequence, String, Table, create_engine)
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.ext.hybrid import hybrid_method
-from sqlalchemy.orm import relationship, backref, sessionmaker
+from sqlalchemy.orm import backref, relationship, sessionmaker
 
 Base = declarative_base()
 con_string = 'postgresql+psycopg2://postgres:4cP#4j9R92@localhost:5432/pruebas'
@@ -34,7 +34,8 @@ class ContactoProveedor(Base):
 
     clave_proveedor = Column(
         String(5),
-        ForeignKey('proveedores.clave', ondelete='RESTRICT', onupdate='RESTRICT'),
+        ForeignKey('proveedores.clave', ondelete='RESTRICT',
+                   onupdate='RESTRICT'),
         primary_key=True
     )
     consecutivo = Column(
@@ -75,6 +76,7 @@ class Cliente(Base):
 
     def __repr__(self):
         return f'Cliente: {self.clave}, {self.nombre}'
+
 
 class ContactoCliente(Base):
     __tablename__ = 'contactos_clientes'
@@ -139,16 +141,19 @@ class Producto(Base):
     descripcion = Column(String(200))
     marca = Column(String(50))
     clave_proveedor = Column(String(5),
-        ForeignKey('proveedores.clave', ondelete='RESTRICT', onupdate='RESTRICT')
-    )
+                             ForeignKey('proveedores.clave',
+                                        ondelete='RESTRICT', onupdate='RESTRICT')
+                             )
     ultimo_costo = Column(Numeric())
     clave_moneda_costo = Column(String(5),
-        ForeignKey('monedas.clave', ondelete='RESTRICT', onupdate='RESTRICT')
-    )
+                                ForeignKey(
+                                    'monedas.clave', ondelete='RESTRICT', onupdate='RESTRICT')
+                                )
     precio_venta = Column(Numeric())
-    clave_moneda_venta= Column(String(5),
-        ForeignKey('monedas.clave', ondelete='RESTRICT', onupdate='RESTRICT')
-    )
+    clave_moneda_venta = Column(String(5),
+                                ForeignKey(
+                                    'monedas.clave', ondelete='RESTRICT', onupdate='RESTRICT')
+                                )
     ultimo_te = Column(Numeric())
 
     @classmethod
@@ -261,6 +266,7 @@ class Asesor(Base):
         asesor = session.query(cls).filter(cls.clave == clave).one()
         return asesor
 
+
 class Cotizacion(Base):
     __tablename__ = 'cotizaciones'
 
@@ -326,7 +332,8 @@ class DetalleCotizacion(Base):
 
     clave_cotizacion = Column(
         Integer(),
-        ForeignKey('cotizaciones.clave', ondelete='RESTRICT', onupdate='RESTRICT'),
+        ForeignKey('cotizaciones.clave',
+                   ondelete='RESTRICT', onupdate='RESTRICT'),
         primary_key=True
     )
     linea = Column(
@@ -337,7 +344,8 @@ class DetalleCotizacion(Base):
     )
     modelo_producto = Column(
         String(50),
-        ForeignKey('productos.modelo', ondelete='RESTRICT', onupdate='RESTRICT')
+        ForeignKey('productos.modelo', ondelete='RESTRICT',
+                   onupdate='RESTRICT')
     )
     tiempo_entrega = Column(String(20))
     cantidad = Column(Integer())
@@ -411,7 +419,8 @@ class MetodoPago(Base):
 class CuentaBancaria(Base):
     __tablename__ = 'cuentas_bancarias'
 
-    clave_secuencia = Sequence('clave_cuentas_bancarias', metadata=Base.metadata)
+    clave_secuencia = Sequence(
+        'clave_cuentas_bancarias', metadata=Base.metadata)
 
     clave = Column(
         Integer(),
@@ -443,15 +452,18 @@ class Compra(Base):
     fecha = Column(Date())
     clave_cotizacion = Column(
         Integer(),
-        ForeignKey('cotizaciones.clave', ondelete='RESTRICT', onupdate='RESTRICT')
+        ForeignKey('cotizaciones.clave',
+                   ondelete='RESTRICT', onupdate='RESTRICT')
     )
     clave_proveedor = Column(
         String(5),
-        ForeignKey('proveedores.clave', ondelete='RESTRICT', onupdate='RESTRICT')
+        ForeignKey('proveedores.clave',
+                   ondelete='RESTRICT', onupdate='RESTRICT')
     )
     clave_forma_pago = Column(
         Integer(),
-        ForeignKey('formas_pago.clave', ondelete='RESTRICT', onupdate='RESTRICT')
+        ForeignKey('formas_pago.clave',
+                   ondelete='RESTRICT', onupdate='RESTRICT')
     )
     clave_cuenta_banco = Column(
         Integer(),
@@ -473,7 +485,8 @@ class Compra(Base):
     )
     clave_metodo_pago = Column(
         Integer(),
-        ForeignKey('metodos_pago.clave', ondelete='RESTRICT', onupdate='RESTRICT')
+        ForeignKey('metodos_pago.clave',
+                   ondelete='RESTRICT', onupdate='RESTRICT')
     )
     clave_credito = Column(
         Integer(),
@@ -502,12 +515,14 @@ class DetalleCompra(Base):
     )
     modelo_producto = Column(
         String(50),
-        ForeignKey('productos.modelo', ondelete='RESTRICT', onupdate='RESTRICT')
+        ForeignKey('productos.modelo', ondelete='RESTRICT',
+                   onupdate='RESTRICT')
     )
     tiempo_entrega = Column(String(20))
     cantidad = Column(Integer())
     precio_unitario = Column(Numeric())
     importe = Column(Numeric())
+
 
 if __name__ == '__main__':
     Base.metadata.create_all(engine)

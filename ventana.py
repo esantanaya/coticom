@@ -1,19 +1,18 @@
-from PyQt5.QtWidgets import *
-from PyQt5.QtCore import *
-from PyQt5.QtGui import *
-from PyQt5 import uic, QtWidgets
-from sqlalchemy.orm.exc import NoResultFound
-from sqlalchemy.exc import OperationalError
-
 import sys
 from datetime import date
-
-from modelos import (
-    Cotizacion, DetalleCotizacion, Cliente, ContactoCliente, CondicionPago,
-    Vigencia, Moneda, Asesor, Nota, Producto, Proveedor
-)
 from exceptions import ErrorConexion
 
+from PyQt5 import QtWidgets, uic
+from PyQt5.QtCore import *
+from PyQt5.QtGui import *
+from PyQt5.QtWidgets import *
+from sqlalchemy.exc import OperationalError
+from sqlalchemy.orm.exc import NoResultFound
+
+from modelos import (Asesor, Cliente, CondicionPago, ContactoCliente,
+                     Cotizacion, DetalleCotizacion, Moneda, Nota, Producto,
+                     Proveedor, Vigencia)
+                     
 
 class Ventana(QMainWindow):
     def __init__(self):
@@ -91,9 +90,9 @@ class Ventana(QMainWindow):
             raise ErrorConexion
 
     def carga_sumas(self):
-        self.label_valor_subtotal.setText('$'+str(self.cotizacion.subtotal))
-        self.label_valor_iva.setText('$'+str(self.cotizacion.iva))
-        self.label_valor_total.setText('$'+str(self.cotizacion.total))
+        self.label_valor_subtotal.setText('$' + str(self.cotizacion.subtotal))
+        self.label_valor_iva.setText('$' + str(self.cotizacion.iva))
+        self.label_valor_total.setText('$' + str(self.cotizacion.total))
 
     def carga_detalles(self):
         try:
@@ -216,6 +215,7 @@ class Error(QDialog):
         uic.loadUi('dialogoError.ui', self)
         self.label_error.setText(mensaje)
         self.boton_ok.clicked.connect(self.close)
+
 
 app = QApplication([])
 try:
