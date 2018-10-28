@@ -501,7 +501,7 @@
       <property name="title">
        <string>Datos</string>
       </property>
-      <widget class="QWidget" name="">
+      <widget class="QWidget" name="layoutWidget">
        <property name="geometry">
         <rect>
          <x>13</x>
@@ -535,7 +535,7 @@
              </sizepolicy>
             </property>
             <property name="editable">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
            </widget>
           </item>
@@ -578,7 +578,7 @@
              </sizepolicy>
             </property>
             <property name="editable">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
            </widget>
           </item>
@@ -621,7 +621,7 @@
              </sizepolicy>
             </property>
             <property name="editable">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
            </widget>
           </item>
@@ -664,7 +664,7 @@
              </sizepolicy>
             </property>
             <property name="editable">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
            </widget>
           </item>
@@ -707,7 +707,7 @@
              </sizepolicy>
             </property>
             <property name="editable">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
            </widget>
           </item>
@@ -750,7 +750,7 @@
              </sizepolicy>
             </property>
             <property name="editable">
-             <bool>true</bool>
+             <bool>false</bool>
             </property>
            </widget>
           </item>
@@ -897,7 +897,7 @@
         </property>
        </column>
       </widget>
-      <widget class="QWidget" name="">
+      <widget class="QWidget" name="layoutWidget">
        <property name="geometry">
         <rect>
          <x>12</x>
@@ -1042,10 +1042,10 @@
       <widget class="QWidget" name="layoutWidget">
        <property name="geometry">
         <rect>
-         <x>320</x>
+         <x>250</x>
          <y>20</y>
-         <width>239</width>
-         <height>26</height>
+         <width>451</width>
+         <height>25</height>
         </rect>
        </property>
        <layout class="QHBoxLayout" name="horizontalLayout_6">
@@ -1057,11 +1057,43 @@
          </widget>
         </item>
         <item>
+         <spacer name="horizontalSpacer_11">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>100</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
          <widget class="QPushButton" name="boton_enviar">
           <property name="text">
            <string>ENVIAR</string>
           </property>
          </widget>
+        </item>
+        <item>
+         <spacer name="horizontalSpacer_12">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeType">
+           <enum>QSizePolicy::Fixed</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>100</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
         </item>
         <item>
          <widget class="QPushButton" name="boton_guardar">
@@ -1147,6 +1179,39 @@
    </property>
   </action>
  </widget>
+ <tabstops>
+  <tabstop>pestanas</tabstop>
+  <tabstop>texto_id</tabstop>
+  <tabstop>boton_cargar</tabstop>
+  <tabstop>boton_buscar</tabstop>
+  <tabstop>boton_nueva</tabstop>
+  <tabstop>boton_crear</tabstop>
+  <tabstop>boton_anterior</tabstop>
+  <tabstop>boton_siguiente</tabstop>
+  <tabstop>control_fecha</tabstop>
+  <tabstop>combobox_clave_cliente</tabstop>
+  <tabstop>texto_nombre_cliente</tabstop>
+  <tabstop>texto_telefonos</tabstop>
+  <tabstop>texto_domicilio</tabstop>
+  <tabstop>texto_nombre_contacto</tabstop>
+  <tabstop>texto_cargo</tabstop>
+  <tabstop>texto_movil_contacto</tabstop>
+  <tabstop>texto_correo_contacto</tabstop>
+  <tabstop>boton_nuevo</tabstop>
+  <tabstop>boton_cargar_cliente</tabstop>
+  <tabstop>boton_buscar_cliente</tabstop>
+  <tabstop>boton_guardar_cliente</tabstop>
+  <tabstop>combobox_condiciones</tabstop>
+  <tabstop>combobox_asesor</tabstop>
+  <tabstop>combobox_vigencia</tabstop>
+  <tabstop>combobox_nota1</tabstop>
+  <tabstop>combobox_moneda</tabstop>
+  <tabstop>combobox_nota2</tabstop>
+  <tabstop>tabla_detalle</tabstop>
+  <tabstop>boton_pdf</tabstop>
+  <tabstop>boton_enviar</tabstop>
+  <tabstop>boton_guardar</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
