@@ -2,9 +2,12 @@ __pycache__/
 env1/
 html/
 assets/
+build/
+dist/
 *.xlsm
 *.bmpr
 *.pdf
 *.vsdx
 *.swp
 *~*
+*.spec

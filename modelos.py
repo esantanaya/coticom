@@ -70,8 +70,13 @@ class Cliente(Base):
         return cliente
 
     @classmethod
-    def get_clientes(cls):
+    def get_clave_clientes(cls):
         clientes = session.query(cls.clave).all()
+        return clientes
+
+    @classmethod
+    def get_clientes(cls):
+        clientes = session.query(cls).all()
         return clientes
 
     def __repr__(self):

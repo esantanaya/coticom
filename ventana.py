@@ -12,7 +12,7 @@ from sqlalchemy.orm.exc import NoResultFound
 from modelos import (Asesor, Cliente, CondicionPago, ContactoCliente,
                      Cotizacion, DetalleCotizacion, Moneda, Nota, Producto,
                      Proveedor, Vigencia)
-                     
+
 
 class Ventana(QMainWindow):
     def __init__(self):
@@ -28,10 +28,13 @@ class Ventana(QMainWindow):
             )
             self.combobox_clave_cliente.setCurrentIndex(1)
             self.carga_datos()
+            self.actionClientes.triggered.connect(self.abre_busqueda_clientes)
         except OperationalError:
             raise ErrorConexion
         except ErrorConexion:
             raise ErrorConexion
+        except FileNotFoundError:
+            raise FileNotFoundError
 
     def cambia_combo_cliente(self):
         if len(self.combobox_clave_cliente.currentText()) > 0:
@@ -50,7 +53,7 @@ class Ventana(QMainWindow):
 
     def carga_clientes(self):
         try:
-            clientes = Cliente.get_clientes()
+            clientes = Cliente.get_clave_clientes()
         except OperationalError:
             raise ErrorConexion
         else:
@@ -95,6 +98,9 @@ class Ventana(QMainWindow):
         self.label_valor_total.setText('$' + str(self.cotizacion.total))
 
     def carga_detalles(self):
+        COL_PARTE, COL_MODELO, COL_DESCRIPCION, COL_MARCA,  COL_TE = range(5)
+        COL_CANTIDAD, COL_PU, COL_IMPORTE,  COL_PROVEEDOR, COL_CU = range(5, 10)
+
         try:
             lineas = DetalleCotizacion.get_detalle(self.cotizacion.clave)
         except OperationalError:
@@ -107,53 +113,94 @@ class Ventana(QMainWindow):
                 self.tabla_detalle.insertRow(num)
                 self.tabla_detalle.setItem(
                     num,
-                    0,
+                    COL_PARTE,
                     QtWidgets.QTableWidgetItem(str(detalle.linea))
                 )
                 self.tabla_detalle.setItem(
                     num,
-                    1,
+                    COL_MODELO,
                     QtWidgets.QTableWidgetItem(producto.modelo)
                 )
                 self.tabla_detalle.setItem(
                     num,
-                    2,
+                    COL_DESCRIPCION,
                     QtWidgets.QTableWidgetItem(producto.descripcion)
                 )
                 self.tabla_detalle.setItem(
                     num,
-                    3,
+                    COL_MARCA,
                     QtWidgets.QTableWidgetItem(producto.marca)
                 )
                 self.tabla_detalle.setItem(
                     num,
-                    4,
+                    COL_TE,
                     QtWidgets.QTableWidgetItem(detalle.tiempo_entrega)
                 )
                 self.tabla_detalle.setItem(
                     num,
-                    5,
+                    COL_CANTIDAD,
                     QtWidgets.QTableWidgetItem(str(detalle.cantidad))
                 )
                 self.tabla_detalle.setItem(
                     num,
-                    6,
+                    COL_PU,
                     QtWidgets.QTableWidgetItem(str(detalle.precio_unitario))
                 )
                 self.tabla_detalle.setItem(
                     num,
-                    7,
+                    COL_IMPORTE,
                     QtWidgets.QTableWidgetItem(str(detalle.importe))
                 )
                 self.tabla_detalle.setItem(
                     num,
-                    8,
+                    COL_PROVEEDOR,
                     QtWidgets.QTableWidgetItem(proveedor.nombre)
                 )
                 self.tabla_detalle.setItem(
                     num,
-                    9,
+                    COL_CU,
                     QtWidgets.QTableWidgetItem(str(producto.ultimo_costo))
+                )
+                cabecera = self.tabla_detalle.horizontalHeader()
+                cabecera.setSectionResizeMode(
+                    COL_PARTE,
+                    QtWidgets.QHeaderView.ResizeToContents
+                )
+                cabecera.setSectionResizeMode(
+                    COL_MODELO,
+                    QtWidgets.QHeaderView.ResizeToContents
+                )
+                cabecera.setSectionResizeMode(
+                    COL_DESCRIPCION,
+                    QtWidgets.QHeaderView.ResizeToContents
+                )
+                cabecera.setSectionResizeMode(
+                    COL_MARCA,
+                    QtWidgets.QHeaderView.ResizeToContents
+                )
+                cabecera.setSectionResizeMode(
+                    COL_TE,
+                    QtWidgets.QHeaderView.ResizeToContents
+                )
+                cabecera.setSectionResizeMode(
+                    COL_CANTIDAD,
+                    QtWidgets.QHeaderView.ResizeToContents
+                )
+                cabecera.setSectionResizeMode(
+                    COL_PU,
+                    QtWidgets.QHeaderView.ResizeToContents
+                )
+                cabecera.setSectionResizeMode(
+                    COL_IMPORTE,
+                    QtWidgets.QHeaderView.ResizeToContents
+                )
+                cabecera.setSectionResizeMode(
+                    COL_PROVEEDOR,
+                    QtWidgets.QHeaderView.ResizeToContents
+                )
+                cabecera.setSectionResizeMode(
+                    COL_CU,
+                    QtWidgets.QHeaderView.ResizeToContents
                 )
 
     def carga_notas(self):
@@ -208,6 +255,71 @@ class Ventana(QMainWindow):
         if cierra:
             self.close()
 
+    def abre_busqueda_clientes(self):
+        try:
+            busqueda = BusquedaClientes()
+            busqueda.exec_()
+        except FileNotFoundError:
+            raise FileNotFoundError
+
+class BusquedaClientes(QDialog):
+    def __init__(self):
+        QDialog.__init__(self)
+        COL_CLAVE, COL_NOMBRE, COL_DOM, COL_TELS = range(4)
+        opciones_busqueda = ['Clave', 'Nombre', 'Domicilio', 'Teléfonos']
+
+        try:
+            uic.loadUi('busqueda_clientes.ui', self)
+            clientes = Cliente.get_clientes()
+            self.tabla_clientes.cellDoubleClicked.connect(self.regresa_cliente)
+        except OperationalError:
+            raise ErrorConexion
+        except FileNotFoundError:
+            raise FileNotFoundError
+        else:
+            for opcion in opciones_busqueda:
+                self.combobox_campos.addItem(opcion)
+            for fila, cliente in enumerate(clientes):
+                self.tabla_clientes.insertRow(fila)
+                self.tabla_clientes.setItem(
+                    fila, COL_CLAVE, QtWidgets.QTableWidgetItem(cliente.clave)
+                )
+                self.tabla_clientes.setItem(
+                    fila, COL_NOMBRE, QtWidgets.QTableWidgetItem(cliente.nombre)
+                )
+                self.tabla_clientes.setItem(
+                    fila, COL_DOM, QtWidgets.QTableWidgetItem(cliente.domicilio)
+                )
+                self.tabla_clientes.setItem(
+                    fila,
+                    COL_TELS,
+                    QtWidgets.QTableWidgetItem(cliente.telefonos)
+                )
+                cabecera = self.tabla_clientes.horizontalHeader()
+                cabecera.setSectionResizeMode(
+                    COL_CLAVE,
+                    QtWidgets.QHeaderView.ResizeToContents
+                )
+                cabecera.setSectionResizeMode(
+                    COL_NOMBRE,
+                    QtWidgets.QHeaderView.ResizeToContents
+                )
+                cabecera.setSectionResizeMode(
+                    COL_DOM,
+                    QtWidgets.QHeaderView.ResizeToContents
+                )
+                cabecera.setSectionResizeMode(
+                    COL_TELS,
+                    QtWidgets.QHeaderView.ResizeToContents
+                )
+
+    def regresa_cliente(self):
+        fila = self.tabla_clientes.currentRow()
+        self.tabla_clientes.setCurrentCell(fila, 0)
+        # TODO: Averiguar cómo enviar la clave del cliente la ventana principal
+        return self.tabla_clientes.currentItem().text()
+
+
 
 class Error(QDialog):
     def __init__(self, mensaje):
@@ -222,6 +334,9 @@ try:
     window = Ventana()
 except ErrorConexion:
     error = Error('Hay un problema con la conexión a la base de datos')
+    error.exec_()
+except FileNotFoundError as fnfe:
+    error = Error('Falta un archivo .ui!', fnfe)
     error.exec_()
 else:
     window.show()
