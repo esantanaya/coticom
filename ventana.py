@@ -272,6 +272,7 @@ class BusquedaClientes(QDialog):
             uic.loadUi('busqueda_clientes.ui', self)
             clientes = Cliente.get_clientes()
             self.tabla_clientes.cellDoubleClicked.connect(self.regresa_cliente)
+            self.boton_seleccionar.clicked.connect(self.regresa_cliente)
         except OperationalError:
             raise ErrorConexion
         except FileNotFoundError:
@@ -314,10 +315,9 @@ class BusquedaClientes(QDialog):
                 )
 
     def regresa_cliente(self):
-        fila = self.tabla_clientes.currentRow()
-        self.tabla_clientes.setCurrentCell(fila, 0)
-        # TODO: Averiguar cómo enviar la clave del cliente la ventana principal
-        return self.tabla_clientes.currentItem().text()
+        window.combobox_clave_cliente.setCurrentIndex(
+            self.tabla_clientes.currentRow()
+        )
 
 
 

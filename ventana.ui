@@ -121,7 +121,7 @@
          <x>8</x>
          <y>10</y>
          <width>881</width>
-         <height>25</height>
+         <height>26</height>
         </rect>
        </property>
        <layout class="QHBoxLayout" name="horizontalLayout_7">
@@ -1022,7 +1022,7 @@
          <x>250</x>
          <y>20</y>
          <width>451</width>
-         <height>25</height>
+         <height>26</height>
         </rect>
        </property>
        <layout class="QHBoxLayout" name="horizontalLayout_6">
@@ -1124,6 +1124,7 @@
     <property name="title">
      <string>Ayuda</string>
     </property>
+    <addaction name="actionAcerca_de"/>
    </widget>
    <addaction name="menuArchivo_Catalogos_Ayuda"/>
    <addaction name="menuCat_logos"/>
@@ -1153,6 +1154,11 @@
   <action name="actionDatos">
    <property name="text">
     <string>Datos</string>
+   </property>
+  </action>
+  <action name="actionAcerca_de">
+   <property name="text">
+    <string>Acerca de...</string>
    </property>
   </action>
  </widget>
