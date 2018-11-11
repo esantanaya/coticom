@@ -75,7 +75,16 @@ class Cliente(Base):
         return clientes
 
     @classmethod
-    def get_clientes(cls):
+    def get_clientes(cls, **kwargs):
+        for llave, valor in kwargs.items():
+            valor = '%' + valor + '%'
+            if llave == 'nombre':
+                clientes = session.query(cls).filter(cls.nombre.like(valor)).all()
+            elif llave == 'domicilio':
+                clientes = session.query(cls).filter(cls.domicilio.like(valor)).all()
+            elif llave == 'telefonos':
+                clientes = session.query(cls).filter(cls.telefonos.like(valor)).all()
+            return clientes
         clientes = session.query(cls).all()
         return clientes
 

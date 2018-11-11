@@ -29,6 +29,8 @@ class Ventana(QMainWindow):
             self.combobox_clave_cliente.setCurrentIndex(1)
             self.carga_datos()
             self.actionClientes.triggered.connect(self.abre_busqueda_clientes)
+            self.boton_buscar_cliente.clicked.connect(self.abre_busqueda_clientes)
+            self.boton_editar_cliente.clicked.connect(self.abre_catalogo_cliente)
         except OperationalError:
             raise ErrorConexion
         except ErrorConexion:
@@ -93,9 +95,9 @@ class Ventana(QMainWindow):
             raise ErrorConexion
 
     def carga_sumas(self):
-        self.label_valor_subtotal.setText('$' + str(self.cotizacion.subtotal))
-        self.label_valor_iva.setText('$' + str(self.cotizacion.iva))
-        self.label_valor_total.setText('$' + str(self.cotizacion.total))
+        self.label_valor_subtotal.setText(f'${self.cotizacion.subtotal:,.2f}')
+        self.label_valor_iva.setText(f'${self.cotizacion.iva:,.2f}')
+        self.label_valor_total.setText(f'${self.cotizacion.total:,.2f}')
 
     def carga_detalles(self):
         COL_PARTE, COL_MODELO, COL_DESCRIPCION, COL_MARCA,  COL_TE = range(5)
@@ -262,17 +264,23 @@ class Ventana(QMainWindow):
         except FileNotFoundError:
             raise FileNotFoundError
 
+    def abre_catalogo_cliente(self):
+        cliente = Cliente.get_cliente(self.combobox_clave_cliente.currentText())
+        catalogo = CatalogoCliente(cliente)
+        catalogo.exec_()
+
+
 class BusquedaClientes(QDialog):
     def __init__(self):
         QDialog.__init__(self)
-        COL_CLAVE, COL_NOMBRE, COL_DOM, COL_TELS = range(4)
-        opciones_busqueda = ['Clave', 'Nombre', 'Domicilio', 'Teléfonos']
+        opciones_busqueda = ['Nombre', 'Domicilio', 'Teléfonos']
 
         try:
             uic.loadUi('busqueda_clientes.ui', self)
-            clientes = Cliente.get_clientes()
+            self.clientes = Cliente.get_clientes()
             self.tabla_clientes.cellDoubleClicked.connect(self.regresa_cliente)
             self.boton_seleccionar.clicked.connect(self.regresa_cliente)
+            self.boton_buscar.clicked.connect(self.busca_clientes)
         except OperationalError:
             raise ErrorConexion
         except FileNotFoundError:
@@ -280,45 +288,94 @@ class BusquedaClientes(QDialog):
         else:
             for opcion in opciones_busqueda:
                 self.combobox_campos.addItem(opcion)
-            for fila, cliente in enumerate(clientes):
-                self.tabla_clientes.insertRow(fila)
-                self.tabla_clientes.setItem(
-                    fila, COL_CLAVE, QtWidgets.QTableWidgetItem(cliente.clave)
-                )
-                self.tabla_clientes.setItem(
-                    fila, COL_NOMBRE, QtWidgets.QTableWidgetItem(cliente.nombre)
-                )
-                self.tabla_clientes.setItem(
-                    fila, COL_DOM, QtWidgets.QTableWidgetItem(cliente.domicilio)
-                )
-                self.tabla_clientes.setItem(
-                    fila,
-                    COL_TELS,
-                    QtWidgets.QTableWidgetItem(cliente.telefonos)
-                )
-                cabecera = self.tabla_clientes.horizontalHeader()
-                cabecera.setSectionResizeMode(
-                    COL_CLAVE,
-                    QtWidgets.QHeaderView.ResizeToContents
-                )
-                cabecera.setSectionResizeMode(
-                    COL_NOMBRE,
-                    QtWidgets.QHeaderView.ResizeToContents
-                )
-                cabecera.setSectionResizeMode(
-                    COL_DOM,
-                    QtWidgets.QHeaderView.ResizeToContents
-                )
-                cabecera.setSectionResizeMode(
-                    COL_TELS,
-                    QtWidgets.QHeaderView.ResizeToContents
-                )
+            self.llena_lista()
+
+    def llena_lista(self):
+        COL_CLAVE, COL_NOMBRE, COL_DOM, COL_TELS = range(4)
+        self.tabla_clientes.clearContents()
+        for fila, cliente in enumerate(self.clientes):
+            self.tabla_clientes.insertRow(fila)
+            self.tabla_clientes.setItem(
+                fila, COL_CLAVE, QtWidgets.QTableWidgetItem(cliente.clave)
+            )
+            self.tabla_clientes.setItem(
+                fila, COL_NOMBRE, QtWidgets.QTableWidgetItem(cliente.nombre)
+            )
+            self.tabla_clientes.setItem(
+                fila, COL_DOM, QtWidgets.QTableWidgetItem(cliente.domicilio)
+            )
+            self.tabla_clientes.setItem(
+                fila,
+                COL_TELS,
+                QtWidgets.QTableWidgetItem(cliente.telefonos)
+            )
+            cabecera = self.tabla_clientes.horizontalHeader()
+            cabecera.setSectionResizeMode(
+                COL_CLAVE,
+                QtWidgets.QHeaderView.ResizeToContents
+            )
+            cabecera.setSectionResizeMode(
+                COL_NOMBRE,
+                QtWidgets.QHeaderView.ResizeToContents
+            )
+            cabecera.setSectionResizeMode(
+                COL_DOM,
+                QtWidgets.QHeaderView.ResizeToContents
+            )
+            cabecera.setSectionResizeMode(
+                COL_TELS,
+                QtWidgets.QHeaderView.ResizeToContents
+            )
 
     def regresa_cliente(self):
-        window.combobox_clave_cliente.setCurrentIndex(
-            self.tabla_clientes.currentRow()
-        )
+        fila = self.tabla_clientes.currentRow()
+        self.tabla_clientes.setCurrentCell(fila, 0)
+        indice = self.tabla_clientes.currentItem().text()
+        cliente = [x for x in self.clientes if x.clave == indice][0]
+        window.carga_cliente(cliente)
+        window.combobox_clave_cliente.setCurrentText(indice)
+        self.close()
 
+    def busca_clientes(self):
+        clave = self.combobox_campos.currentText()
+        texto = self.texto_buscar.text()
+        if clave == 'Nombre':
+            self.clientes = Cliente.get_clientes(nombre=texto)
+        elif clave == 'Domicilio':
+            self.clientes = Cliente.get_clientes(domicilio=texto)
+        elif clave == 'Teléfonos':
+            self.clientes = Cliente.get_clientes(telefonos=texto)
+        self.llena_lista()
+
+
+class CatalogoCliente(QDialog):
+    def __init__(self, cliente):
+        QDialog.__init__(self)
+        uic.loadUi('catalogo_cliente.ui', self)
+        self.cliente = cliente
+        self.carga_cliente()
+
+    def carga_cliente(self):
+        self.texto_clave.setText(self.cliente.clave)
+        self.texto_clave.setEnabled(False)
+        self.texto_nombre_cliente.setText(self.cliente.nombre)
+        self.texto_telefonos.setText(self.cliente.telefonos)
+        self.texto_domicilio.setText(self.cliente.domicilio)
+        try:
+            contacto = ContactoCliente.get_contacto_primario(self.cliente)
+        except NoResultFound:
+            self.vacia_contacto()
+        else:
+            self.texto_nombre_contacto.setText(contacto.nombre)
+            self.texto_cargo.setText(contacto.cargo)
+            self.texto_movil_contacto.setText(contacto.movil)
+            self.texto_correo_contacto.setText(contacto.correo)
+
+    def vacia_contacto(self):
+        self.texto_nombre_contacto.clear()
+        self.texto_cargo.clear()
+        self.texto_movil_contacto.clear()
+        self.texto_correo_contacto.clear()
 
 
 class Error(QDialog):
