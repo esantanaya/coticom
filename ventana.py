@@ -293,6 +293,7 @@ class BusquedaClientes(QDialog):
     def llena_lista(self):
         COL_CLAVE, COL_NOMBRE, COL_DOM, COL_TELS = range(4)
         self.tabla_clientes.clearContents()
+        self.tabla_clientes.setRowCount(0)
         for fila, cliente in enumerate(self.clientes):
             self.tabla_clientes.insertRow(fila)
             self.tabla_clientes.setItem(
@@ -353,7 +354,20 @@ class CatalogoCliente(QDialog):
         QDialog.__init__(self)
         uic.loadUi('catalogo_cliente.ui', self)
         self.cliente = cliente
+        self.contacto = ContactoCliente(clave_cliente=cliente.clave)
         self.carga_cliente()
+        self.boton_guardar.clicked.connect(self.guarda_cliente)
+
+    def guarda_cliente(self):
+        self.cliente.nombre = self.texto_nombre_cliente.text()
+        self.cliente.domicilio = self.texto_domicilio.text()
+        self.cliente.telefonos = self.texto_telefonos.text()
+        self.cliente.guardar()
+        self.contacto.nombre = self.texto_nombre_contacto.text()
+        self.contacto.cargo = self.texto_cargo.text()
+        self.contacto.movil = self.texto_movil_contacto.text()
+        self.contacto.correo = self.texto_correo_contacto.text()
+        self.contacto.guardar()
 
     def carga_cliente(self):
         self.texto_clave.setText(self.cliente.clave)
@@ -362,14 +376,14 @@ class CatalogoCliente(QDialog):
         self.texto_telefonos.setText(self.cliente.telefonos)
         self.texto_domicilio.setText(self.cliente.domicilio)
         try:
-            contacto = ContactoCliente.get_contacto_primario(self.cliente)
+            self.contacto = ContactoCliente.get_contacto_primario(self.cliente)
         except NoResultFound:
             self.vacia_contacto()
         else:
-            self.texto_nombre_contacto.setText(contacto.nombre)
-            self.texto_cargo.setText(contacto.cargo)
-            self.texto_movil_contacto.setText(contacto.movil)
-            self.texto_correo_contacto.setText(contacto.correo)
+            self.texto_nombre_contacto.setText(self.contacto.nombre)
+            self.texto_cargo.setText(self.contacto.cargo)
+            self.texto_movil_contacto.setText(self.contacto.movil)
+            self.texto_correo_contacto.setText(self.contacto.correo)
 
     def vacia_contacto(self):
         self.texto_nombre_contacto.clear()

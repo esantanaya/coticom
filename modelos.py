@@ -64,6 +64,10 @@ class Cliente(Base):
     telefonos = Column(String(50))
     domicilio = Column(String(500))
 
+    def guardar(self):
+        session.add(self)
+        session.commit()
+
     @classmethod
     def get_cliente(cls, clave):
         cliente = session.query(cls).filter(cls.clave == clave).one()
@@ -121,6 +125,19 @@ class ContactoCliente(Base):
         backref=backref('contactos_clientes'),
         order_by=clave_cliente
     )
+
+    def __init__(self, clave_cliente='', nombre='', cargo='',
+                 correo='', movil='', principal=True):
+        self.clave_cliente = clave_cliente
+        self.nombre = nombre
+        self.cargo = cargo
+        self.correo = correo
+        self.movil = movil
+        self.principal = principal
+
+    def guardar(self):
+        session.add(self)
+        session.commit()
 
     @classmethod
     def get_contacto_primario(cls, cliente):
