@@ -64,9 +64,21 @@ class Cliente(Base):
     telefonos = Column(String(50))
     domicilio = Column(String(500))
 
+    def __init__(self, clave='', nombre='', telefonos='', domicilio=''):
+        self.clave = clave
+        self.nombre = nombre
+        self.telefonos = telefonos
+        self.domicilio = domicilio
+
     def guardar(self):
-        session.add(self)
-        session.commit()
+        if self.clave == '':
+            raise GuardadoError
+        try:
+            session.add(self)
+            session.commit()
+        except:
+            session.rollback()
+            raise DuplicadoError
 
     @classmethod
     def get_cliente(cls, clave):
@@ -554,6 +566,12 @@ class DetalleCompra(Base):
     precio_unitario = Column(Numeric())
     importe = Column(Numeric())
 
+
+class GuardadoError(Exception):
+    pass
+
+class DuplicadoError(Exception):
+    pass
 
 if __name__ == '__main__':
     Base.metadata.create_all(engine)

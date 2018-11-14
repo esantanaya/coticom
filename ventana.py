@@ -11,7 +11,7 @@ from sqlalchemy.orm.exc import NoResultFound
 
 from modelos import (Asesor, Cliente, CondicionPago, ContactoCliente,
                      Cotizacion, DetalleCotizacion, Moneda, Nota, Producto,
-                     Proveedor, Vigencia)
+                     Proveedor, Vigencia, GuardadoError, DuplicadoError)
 
 
 class Ventana(QMainWindow):
@@ -30,7 +30,8 @@ class Ventana(QMainWindow):
             self.carga_datos()
             self.actionClientes.triggered.connect(self.abre_busqueda_clientes)
             self.boton_buscar_cliente.clicked.connect(self.abre_busqueda_clientes)
-            self.boton_editar_cliente.clicked.connect(self.abre_catalogo_cliente)
+            self.boton_editar_cliente.clicked.connect(self.abre_edita_cliente)
+            self.boton_nuevo.clicked.connect(self.abre_nuevo_cliente)
         except OperationalError:
             raise ErrorConexion
         except ErrorConexion:
@@ -50,6 +51,8 @@ class Ventana(QMainWindow):
                     'Hay un problema con la conexión a la base de datos',
                     True
                 )
+            except GuardadoError:
+                self.muestra_error('No se puede dejar la clave en blanco', True)
             except ErrorConexion:
                 raise ErrorConexion
 
@@ -264,9 +267,15 @@ class Ventana(QMainWindow):
         except FileNotFoundError:
             raise FileNotFoundError
 
-    def abre_catalogo_cliente(self):
+    def abre_edita_cliente(self):
         cliente = Cliente.get_cliente(self.combobox_clave_cliente.currentText())
         catalogo = CatalogoCliente(cliente)
+        catalogo.exec_()
+
+    def abre_nuevo_cliente(self):
+        cliente = Cliente()
+        catalogo = CatalogoCliente(cliente)
+        catalogo.texto_clave.setEnabled(True)
         catalogo.exec_()
 
 
@@ -359,15 +368,24 @@ class CatalogoCliente(QDialog):
         self.boton_guardar.clicked.connect(self.guarda_cliente)
 
     def guarda_cliente(self):
-        self.cliente.nombre = self.texto_nombre_cliente.text()
-        self.cliente.domicilio = self.texto_domicilio.text()
-        self.cliente.telefonos = self.texto_telefonos.text()
-        self.cliente.guardar()
-        self.contacto.nombre = self.texto_nombre_contacto.text()
-        self.contacto.cargo = self.texto_cargo.text()
-        self.contacto.movil = self.texto_movil_contacto.text()
-        self.contacto.correo = self.texto_correo_contacto.text()
-        self.contacto.guardar()
+        try:
+            self.cliente.clave = self.texto_clave.text()
+            self.cliente.nombre = self.texto_nombre_cliente.text()
+            self.cliente.domicilio = self.texto_domicilio.text()
+            self.cliente.telefonos = self.texto_telefonos.text()
+            self.cliente.guardar()
+            self.contacto.clave_cliente = self.cliente.clave
+            self.contacto.nombre = self.texto_nombre_contacto.text()
+            self.contacto.cargo = self.texto_cargo.text()
+            self.contacto.movil = self.texto_movil_contacto.text()
+            self.contacto.correo = self.texto_correo_contacto.text()
+            self.contacto.guardar()
+        except GuardadoError:
+            error = Error('Se se puede dejar la clave en blanco')
+            error.exec_()
+        except DuplicadoError:
+            error = Error('La clave se encuentra duplicada')
+            error.exec_()
 
     def carga_cliente(self):
         self.texto_clave.setText(self.cliente.clave)

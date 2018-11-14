@@ -132,6 +132,15 @@
    </layout>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>combobox_campos</tabstop>
+  <tabstop>texto_buscar</tabstop>
+  <tabstop>boton_buscar</tabstop>
+  <tabstop>pushButton_2</tabstop>
+  <tabstop>tabla_clientes</tabstop>
+  <tabstop>boton_seleccionar</tabstop>
+  <tabstop>boton_editar</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

@@ -175,9 +175,9 @@
   <widget class="QWidget" name="layoutWidget_5">
    <property name="geometry">
     <rect>
-     <x>452</x>
-     <y>11</y>
-     <width>91</width>
+     <x>440</x>
+     <y>10</y>
+     <width>101</width>
      <height>24</height>
     </rect>
    </property>
@@ -215,6 +215,17 @@
    </property>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>texto_clave</tabstop>
+  <tabstop>texto_nombre_cliente</tabstop>
+  <tabstop>texto_telefonos</tabstop>
+  <tabstop>texto_domicilio</tabstop>
+  <tabstop>texto_nombre_contacto</tabstop>
+  <tabstop>texto_cargo</tabstop>
+  <tabstop>texto_movil_contacto</tabstop>
+  <tabstop>texto_correo_contacto</tabstop>
+  <tabstop>boton_guardar</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
