@@ -3,6 +3,7 @@ from sqlalchemy import (Boolean, Column, Date, ForeignKey, Integer, Numeric,
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.ext.hybrid import hybrid_method
 from sqlalchemy.orm import backref, relationship, sessionmaker
+from sqlalchemy.exc import DataError, InternalError
 
 Base = declarative_base()
 con_string = 'postgresql+psycopg2://postgres:4cP#4j9R92@localhost:5432/pruebas'
@@ -203,6 +204,66 @@ class Producto(Base):
     def get_producto(cls, modelo):
         producto = session.query(cls).filter(cls.modelo == modelo).one()
         return producto
+
+    @classmethod
+    def get_productos_modelo(cls):
+        productos = session.query(cls.modelo).all()
+        return productos
+
+    @classmethod
+    def get_productos(cls, **kwargs):
+        for llave, valor in kwargs.items():
+            if llave in ['ultimo_costo', 'precio_venta', 'ultimo_te']:
+                try:
+                    valor = float(valor)
+                except ValueError:
+                    raise TipoValorError
+            else:
+                valor = '%' + valor + '%'
+            try:
+                if llave == 'modelo':
+                    productos = session.query(cls).filter(
+                        cls.modelo.like(valor)
+                    ).all()
+                elif llave == 'descripcion':
+                    productos = session.query(cls).filter(
+                        cls.descripcion.like(valor)
+                    ).all()
+                elif llave == 'marca':
+                    productos = session.query(cls).filter(
+                        cls.marca.like(valor)
+                    ).all()
+                elif llave == 'proveedor':
+                    productos = session.query(cls).filter(
+                        cls.clave_proveedor == Proveedor.clave
+                    ).filter(Proveedor.nombre.like(valor)).all()
+                elif llave == 'ultimo_costo':
+                    productos = session.query(cls).filter(
+                        cls.ultimo_costo == valor
+                    ).all()
+                elif llave == 'moneda_costo':
+                    productos = session.query(cls).filter(
+                        cls.clave_moneda_costo == Moneda.clave
+                    ).filter(Moneda.descripcion.like(valor)).all()
+                elif llave == 'precio_venta':
+                    productos = session.query(cls).filter(
+                        cls.precio_venta == valor
+                    ).all()
+                elif llave == 'moneda_venta':
+                    productos = session.query(cls).filter(
+                        cls.clave_moneda_venta == Moneda.clave
+                    ).filter(Moneda.descripcion.like(valor)).all()
+                elif llave == 'ultimo_te':
+                    productos = session.query(cls).filter(
+                        cls.ultimo_te == valor
+                    ).all()
+                return productos
+            except DataError:
+                pass
+            except InternalError:
+                pass
+        productos = session.query(cls).all()
+        return productos
 
 
 class Correo(Base):
@@ -570,8 +631,14 @@ class DetalleCompra(Base):
 class GuardadoError(Exception):
     pass
 
+
 class DuplicadoError(Exception):
     pass
+
+
+class TipoValorError(Exception):
+    pass
+
 
 if __name__ == '__main__':
     Base.metadata.create_all(engine)

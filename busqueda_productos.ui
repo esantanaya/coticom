@@ -6,15 +6,12 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>569</width>
-    <height>362</height>
+    <width>867</width>
+    <height>539</height>
    </rect>
   </property>
-  <property name="cursor">
-   <cursorShape>ArrowCursor</cursorShape>
-  </property>
   <property name="windowTitle">
-   <string>Busqueda Clientes</string>
+   <string>Busqueda de Productos</string>
   </property>
   <property name="windowIcon">
    <iconset>
@@ -23,9 +20,9 @@
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>17</x>
-     <y>11</y>
-     <width>541</width>
+     <x>10</x>
+     <y>10</y>
+     <width>851</width>
      <height>26</height>
     </rect>
    </property>
@@ -48,21 +45,28 @@
      </widget>
     </item>
     <item>
-     <widget class="QPushButton" name="pushButton_2">
+     <widget class="QPushButton" name="boton_nuevo">
       <property name="text">
        <string>Nuevo</string>
       </property>
      </widget>
     </item>
+    <item>
+     <widget class="QPushButton" name="boton_limpiar">
+      <property name="text">
+       <string>Limpiar</string>
+      </property>
+     </widget>
+    </item>
    </layout>
   </widget>
-  <widget class="QTableWidget" name="tabla_clientes">
+  <widget class="QTableWidget" name="tabla_productos">
    <property name="geometry">
     <rect>
      <x>10</x>
      <y>50</y>
-     <width>551</width>
-     <height>261</height>
+     <width>851</width>
+     <height>481</height>
     </rect>
    </property>
    <property name="editTriggers">
@@ -74,76 +78,56 @@
    <property name="selectionBehavior">
     <enum>QAbstractItemView::SelectRows</enum>
    </property>
+   <attribute name="horizontalHeaderCascadingSectionResizes">
+    <bool>false</bool>
+   </attribute>
    <column>
     <property name="text">
-     <string>Clave</string>
+     <string>Modelo</string>
     </property>
    </column>
    <column>
     <property name="text">
-     <string>Nombre</string>
+     <string>Descripción</string>
     </property>
    </column>
    <column>
     <property name="text">
-     <string>Domicilio</string>
+     <string>Marca</string>
     </property>
    </column>
    <column>
     <property name="text">
-     <string>Teléfonos</string>
+     <string>Proveedor</string>
     </property>
    </column>
-  </widget>
-  <widget class="QWidget" name="layoutWidget">
-   <property name="geometry">
-    <rect>
-     <x>160</x>
-     <y>320</y>
-     <width>231</width>
-     <height>26</height>
-    </rect>
-   </property>
-   <layout class="QHBoxLayout" name="horizontalLayout_2">
-    <item>
-     <widget class="QPushButton" name="boton_seleccionar">
-      <property name="text">
-       <string>Seleccionar</string>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <spacer name="horizontalSpacer">
-      <property name="orientation">
-       <enum>Qt::Horizontal</enum>
-      </property>
-      <property name="sizeHint" stdset="0">
-       <size>
-        <width>88</width>
-        <height>20</height>
-       </size>
-      </property>
-     </spacer>
-    </item>
-    <item>
-     <widget class="QPushButton" name="boton_editar">
-      <property name="text">
-       <string>Editar</string>
-      </property>
-     </widget>
-    </item>
-   </layout>
+   <column>
+    <property name="text">
+     <string>Último Costo</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Moneda Costo</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Precio Venta</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Moneda Venta</string>
+    </property>
+   </column>
+   <column>
+    <property name="text">
+     <string>Último TE</string>
+    </property>
+   </column>
   </widget>
  </widget>
- <tabstops>
-  <tabstop>combobox_campos</tabstop>
-  <tabstop>texto_buscar</tabstop>
-  <tabstop>boton_buscar</tabstop>
-  <tabstop>pushButton_2</tabstop>
-  <tabstop>tabla_clientes</tabstop>
-  <tabstop>boton_seleccionar</tabstop>
-  <tabstop>boton_editar</tabstop>
- </tabstops>
  <resources/>
  <connections/>
 </ui>

@@ -13,6 +13,10 @@
   <property name="windowTitle">
    <string>Mensaje Error!</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>assets/image016.png</normaloff>assets/image016.png</iconset>
+  </property>
   <widget class="QLabel" name="label_error">
    <property name="geometry">
     <rect>

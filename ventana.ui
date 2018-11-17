@@ -994,6 +994,32 @@
         </item>
        </layout>
       </widget>
+      <widget class="QWidget" name="">
+       <property name="geometry">
+        <rect>
+         <x>720</x>
+         <y>210</y>
+         <width>158</width>
+         <height>26</height>
+        </rect>
+       </property>
+       <layout class="QHBoxLayout" name="horizontalLayout_17">
+        <item>
+         <widget class="QPushButton" name="boton_agregar">
+          <property name="text">
+           <string>Agregar</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="boton_eliminar">
+          <property name="text">
+           <string>Eliminar</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
      </widget>
      <widget class="QFrame" name="frame">
       <property name="geometry">
@@ -1191,6 +1217,8 @@
   <tabstop>combobox_moneda</tabstop>
   <tabstop>combobox_nota2</tabstop>
   <tabstop>tabla_detalle</tabstop>
+  <tabstop>boton_agregar</tabstop>
+  <tabstop>boton_eliminar</tabstop>
   <tabstop>boton_pdf</tabstop>
   <tabstop>boton_enviar</tabstop>
   <tabstop>boton_guardar</tabstop>
