@@ -35,7 +35,11 @@
      </widget>
     </item>
     <item>
-     <widget class="QLineEdit" name="texto_buscar"/>
+     <widget class="QLineEdit" name="texto_buscar">
+      <property name="clearButtonEnabled">
+       <bool>true</bool>
+      </property>
+     </widget>
     </item>
     <item>
      <widget class="QPushButton" name="boton_buscar">
@@ -128,6 +132,14 @@
    </column>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>combobox_campos</tabstop>
+  <tabstop>texto_buscar</tabstop>
+  <tabstop>boton_buscar</tabstop>
+  <tabstop>boton_nuevo</tabstop>
+  <tabstop>boton_limpiar</tabstop>
+  <tabstop>tabla_productos</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>

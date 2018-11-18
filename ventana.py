@@ -432,6 +432,10 @@ class BusquedaProductos(QDialog):
             uic.loadUi('busqueda_productos.ui', self)
             self.boton_buscar.clicked.connect(self.busca_productos)
             self.boton_limpiar.clicked.connect(self.carga_completa)
+            self.boton_nuevo.clicked.connect(self.abre_nuevo_producto)
+            self.tabla_productos.cellDoubleClicked.connect(
+                self.abre_edita_producto
+            )
             self.carga_completa()
         except ErrorConexion:
             raise ErrorConexion
@@ -529,6 +533,71 @@ class BusquedaProductos(QDialog):
         except TipoValorError:
             error = Error('De ingresar un valor numerico')
             error.exec_()
+
+    def abre_nuevo_producto(self):
+        producto = Producto()
+        catalogo_producto = CatalogoProducto(producto)
+        catalogo_producto.texto_modelo.setEnabled(True)
+        catalogo_producto.exec_()
+
+    def abre_edita_producto(self):
+        producto = Producto.get_producto(
+            self.tabla_productos.selectedItems()[0].text()
+        )
+        catalogo_producto = CatalogoProducto(producto)
+        catalogo_producto.exec_()
+
+
+class CatalogoProducto(QDialog):
+    def __init__(self, producto):
+        self.producto = producto
+        QDialog.__init__(self)
+        uic.loadUi('catalogo_producto.ui', self)
+        self.llena_proveedores()
+        self.llena_monedas()
+        self.boton_guardar.clicked.connect(self.guardar)
+
+        self.texto_modelo.setText(self.producto.modelo)
+        self.texto_marca.setText(self.producto.marca)
+        self.texto_descripcion.setText(self.producto.descripcion)
+        self.combobox_proveedor.setCurrentText(self.producto.clave_proveedor)
+        self.texto_ultcosto.setText(str(self.producto.ultimo_costo))
+        self.texto_precio_venta.setText(str(self.producto.precio_venta))
+        self.texto_ulte.setText(str(self.producto.ultimo_te))
+        self.combobox_moncost.setCurrentText(self.producto.clave_moneda_costo)
+        self.combobox_monven.setCurrentText(self.producto.clave_moneda_venta)
+
+    def llena_proveedores(self):
+        self.proveedores = Proveedor.get_proveedores_clave()
+        for proveedor in self.proveedores:
+            self.combobox_proveedor.addItem(proveedor[0])
+
+    def llena_monedas(self):
+        self.monedas = Moneda.get_monedas_clave()
+        for moneda in self.monedas:
+            self.combobox_moncost.addItem(moneda[0])
+            self.combobox_monven.addItem(moneda[0])
+
+    def guardar(self):
+        try:
+            self.producto.ultimo_costo = float(self.texto_ultcosto.text()[1:])
+        except ValueError:
+            self.producto.ultimo_costo = 0.0
+        try:
+            self.producto.ultimo_te = float(self.texto_ulte.text()[1:])
+        except ValueError:
+            self.producto.ultimo_te = 0.0
+        try:
+            self.producto.precio_venta = float(self.texto_precio_venta.text()[1:])
+        except ValueError:
+            self.producto.precio_venta = 0.0
+        self.producto.modelo = self.texto_modelo.text()
+        self.producto.descripcion = self.texto_descripcion.text()
+        self.producto.marca = self.texto_marca.text()
+        self.producto.clave_proveedor = self.combobox_proveedor.currentText()
+        self.producto.clave_moneda_costo = self.combobox_moncost.currentText()
+        self.producto.clave_moneda_venta = self.combobox_monven.currentText()
+        self.producto.guardar()
 
 
 class Combo(QtWidgets.QComboBox):

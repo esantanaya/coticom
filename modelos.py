@@ -25,6 +25,11 @@ class Proveedor(Base):
         proveedor = session.query(cls).filter(cls.clave == clave).one()
         return proveedor
 
+    @classmethod
+    def get_proveedores_clave(cls):
+        proveedores = session.query(cls.clave).all()
+        return proveedores
+
 
 class ContactoProveedor(Base):
     __tablename__ = 'contactos_proveedores'
@@ -173,6 +178,11 @@ class Moneda(Base):
         return monedas
 
     @classmethod
+    def get_monedas_clave(cls):
+        monedas = session.query(cls.clave).all()
+        return monedas
+
+    @classmethod
     def get_moneda(cls, clave):
         moneda = session.query(cls).filter(cls.clave == clave).one()
         return moneda
@@ -199,6 +209,29 @@ class Producto(Base):
                                     'monedas.clave', ondelete='RESTRICT', onupdate='RESTRICT')
                                 )
     ultimo_te = Column(Numeric())
+
+    def __init__(self, modelo='', descripcion='', marca='', clave_proveedor='',
+                 ultimo_costo='', clave_moneda_costo='', precio_venta='',
+                 clave_moneda_venta='', ultimo_te=''):
+        self.modelo = modelo
+        self.descripcion = descripcion
+        self.marca = marca
+        self.clave_proveedor = clave_proveedor
+        self.ultimo_costo = ultimo_costo
+        self.clave_moneda_costo = clave_moneda_costo
+        self.precio_venta = precio_venta
+        self.clave_moneda_venta = clave_moneda_venta
+        self.ultimo_te = ultimo_te
+
+    def guardar(self):
+        if self.modelo == '':
+            raise GuardadoError
+        try:
+            session.add(self)
+            session.commit()
+        except:
+            session.rollback()
+            raise DuplicadoError
 
     @classmethod
     def get_producto(cls, modelo):
